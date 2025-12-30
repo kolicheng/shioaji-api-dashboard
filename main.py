@@ -10,6 +10,7 @@ from typing import Literal, Optional
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Header, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, model_validator
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -785,6 +786,9 @@ async def recheck_order_status(
 
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+
+# Mount static files directory for CSS, JS, etc.
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 @app.get("/health")

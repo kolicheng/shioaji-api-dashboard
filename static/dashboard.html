@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自動交易控制台</title>
-    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script>
+        // Cache busting: append timestamp to CSS/JS URLs
+        const cacheBuster = Date.now();
+        document.write('<link rel="stylesheet" href="/static/css/dashboard.css?v=' + cacheBuster + '">');
+    </script>
+    <noscript><link rel="stylesheet" href="/static/css/dashboard.css"></noscript>
 </head>
 <body>
     <div class="container">
@@ -324,6 +329,11 @@ if (strategy.position_size < 0)
         </div>
     </div>
     
-    <script src="/static/js/dashboard.js"></script>
+    <script>
+        // Cache busting for JS
+        const script = document.createElement('script');
+        script.src = '/static/js/dashboard.js?v=' + Date.now();
+        document.body.appendChild(script);
+    </script>
 </body>
 </html>
