@@ -45,12 +45,41 @@ const fillStatusLabels = {
 };
 const dirLabels = { buy: '買', sell: '賣', Buy: '買', Sell: '賣' };
 
+// Local Storage Keys
+const STORAGE_KEY_AUTH = 'shioaji_dashboard_auth_key';
+const STORAGE_KEY_SIMULATION = 'shioaji_dashboard_simulation_mode';
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('webhookUrl').textContent = webhookUrl;
+    
+    // Load saved credentials from localStorage
+    const savedAuthKey = localStorage.getItem(STORAGE_KEY_AUTH);
+    if (savedAuthKey) {
+        document.getElementById('authKey').value = savedAuthKey;
+    }
+    
+    // Load saved simulation mode preference
+    const savedSimMode = localStorage.getItem(STORAGE_KEY_SIMULATION);
+    if (savedSimMode !== null) {
+        document.getElementById('simulationMode').checked = savedSimMode === 'true';
+    }
+    
+    // Save auth key when changed
+    document.getElementById('authKey').addEventListener('input', (e) => {
+        localStorage.setItem(STORAGE_KEY_AUTH, e.target.value);
+    });
+    
+    // Save simulation mode when changed
+    document.getElementById('simulationMode').addEventListener('change', (e) => {
+        localStorage.setItem(STORAGE_KEY_SIMULATION, e.target.checked);
+    });
+    
+    // Load data on Enter key
     document.getElementById('authKey').addEventListener('keypress', (e) => { 
         if (e.key === 'Enter') loadCurrentTab(); 
     });
+    
     fetchSymbols();
 });
 
