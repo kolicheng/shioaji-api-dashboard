@@ -157,14 +157,16 @@ def get_current_position(api: sj.Shioaji, contract: Contract):
     logger.debug(f"Getting current position for contract: {contract.code}")
     for position in api.list_positions(api.futopt_account):
         if contract.code == position.code:
-            if position.side == sj.constant.Action.Buy:
+            # FuturePosition uses 'direction' not 'side'
+            direction = position.direction
+            if direction == sj.constant.Action.Buy:
                 logger.debug(f"Found long position: {position.quantity}")
                 return position.quantity
-            elif position.side == sj.constant.Action.Sell:
+            elif direction == sj.constant.Action.Sell:
                 logger.debug(f"Found short position: {-position.quantity}")
                 return -position.quantity
             else:
-                raise ValueError(f"Position {position.code} has invalid side")
+                raise ValueError(f"Position {position.code} has invalid direction: {direction}")
     logger.debug("No position found")
     return None
 
