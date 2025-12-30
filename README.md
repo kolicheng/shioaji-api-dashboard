@@ -48,6 +48,16 @@
 
 ## 🚀 快速開始
 
+### 系統需求
+
+| 需求 | 說明 |
+|------|------|
+| **作業系統** | Linux、macOS、或 Windows（需啟用 WSL2） |
+| **Docker** | Docker Engine 20.10+ 與 Docker Compose V2 |
+| **永豐金帳戶** | 需申請 Shioaji API 金鑰 |
+
+> 💡 **Windows 用戶注意：** 本系統使用 Bash 腳本，Windows 用戶請先安裝 [WSL2](https://docs.microsoft.com/zh-tw/windows/wsl/install)，並在 WSL 環境中執行所有指令。
+
 ### 1. 複製專案
 
 ```bash
