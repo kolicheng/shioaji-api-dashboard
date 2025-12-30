@@ -44,6 +44,7 @@ from trading import (
     get_valid_symbols,
     get_valid_contract_codes,
     get_contract_from_symbol,
+    get_contract_from_contract_code,
     get_current_position,
 )
 
@@ -391,9 +392,19 @@ class TradingWorker:
 
             elif operation == TradingOperation.GET_POSITIONS.value:
                 positions = api.list_positions(api.futopt_account)
-                positions_data = [
-                    {
+                positions_data = []
+                for p in positions:
+                    # Look up symbol from contract code
+                    try:
+                        contract = get_contract_from_contract_code(api, p.code)
+                        symbol = contract.symbol
+                    except ValueError:
+                        # Contract not in supported futures, use code as fallback
+                        symbol = p.code
+                    
+                    positions_data.append({
                         "id": getattr(p, "id", ""),
+                        "symbol": symbol,
                         "code": p.code,
                         "direction": str(p.direction.value) if hasattr(p.direction, 'value') else str(p.direction),
                         "quantity": p.quantity,
@@ -402,9 +413,7 @@ class TradingWorker:
                         "pnl": p.pnl,
                         "yd_quantity": getattr(p, "yd_quantity", 0),
                         "cond": getattr(p, "cond", ""),
-                    }
-                    for p in positions
-                ]
+                    })
                 return TradingResponse(
                     request_id=request.request_id,
                     success=True,
