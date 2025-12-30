@@ -353,9 +353,10 @@ docker compose logs -f trading-worker
 
 如果你需要：
 - 🔧 客製化功能開發
-- 🏢 企業部署支援
-- 📊 交易策略整合
-- 🛡️ 安全性強化
+- 🏢 企業部署支援（AWS, GCP, SaaS 設計）
+- 📊 交易策略整合（PineScript 開發）
+- 🛡️ 安全性強化（SSL）
+- 📈 效能優化
 
 歡迎聯繫：**luisleo52655@gmail.com**
 
