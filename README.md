@@ -1,6 +1,11 @@
 # 📈 Shioaji Auto-Trading API
 
-基於 [Shioaji](https://sinotrade.github.io/) 的自動交易 API 服務，專為 TradingView Webhook 設計，可自動執行台灣期貨交易。
+基於 [Shioaji](https://sinotrade.github.io/) 的自動交易 API 服務，可自動執行台灣期貨交易。
+
+**適用於任何能執行交易策略的環境**，包括但不限於：
+- 📺 TradingView (Webhook)
+- 🐍 Python (Backtrader, Zipline, VectorBT, 自訂策略)
+- 📊 任何能取得 OHLCV 資料並發送 HTTP 請求的系統
 
 <p align="center">
   <img src="docs/images/dashboard-orders.png" alt="委託紀錄" width="100%">
@@ -8,7 +13,8 @@
 
 ## ✨ 功能特色
 
-- 🔗 **TradingView Webhook 整合** - 直接接收 TradingView 警報，自動下單
+- 🔗 **通用 REST API** - 支援任何能發送 HTTP 請求的交易策略環境
+- 📺 **TradingView 整合** - 原生支援 Webhook，直接接收警報自動下單
 - 🌐 **內建 HTTPS 隧道** - 透過 NGROK 自動提供公開 HTTPS URL，無需設定 SSL 憑證
 - 🛡️ **IP 白名單** - NGINX 反向代理支援 IP 過濾，保護 API 端點
 - 🪟 **Windows 原生支援** - 直接使用 Docker Desktop 運行，無需 WSL
