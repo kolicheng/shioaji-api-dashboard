@@ -153,10 +153,47 @@ def get_contract_from_contract_code(api: sj.Shioaji, contract_code: str) -> Cont
     raise ValueError(f"Contract {contract_code} not found in supported futures: {SUPPORTED_FUTURES}")
 
 
+def resolve_actual_contract_code(api: sj.Shioaji, contract: Contract) -> str:
+    """
+    Resolve a contract to its actual trading code.
+    
+    Rolling contracts (like MXFR1, TXFR1) have code == symbol (e.g., "MXFR1"),
+    but positions are stored with the actual contract code (e.g., "MXFA6").
+    
+    This function resolves rolling contracts to their actual code by matching
+    category + delivery_month with actual contracts.
+    
+    Args:
+        api: Shioaji API instance
+        contract: The contract to resolve
+        
+    Returns:
+        The actual contract code (e.g., "MXFA6" for MXFR1)
+    """
+    # If code != symbol, it's already an actual contract (e.g., MXF202601 -> MXFA6)
+    if contract.code != contract.symbol:
+        return contract.code
+    
+    # For rolling contracts (code == symbol, e.g., MXFR1 -> MXFR1),
+    # find the actual contract by matching category + delivery_month
+    for c in _get_futures_contracts(api):
+        if (c.category == contract.category and 
+            c.delivery_month == contract.delivery_month and 
+            c.code != c.symbol):  # Actual contract has different code from symbol
+            logger.debug(f"Resolved rolling contract {contract.code} to actual code {c.code}")
+            return c.code
+    
+    # Fallback: return original code if no match found
+    logger.warning(f"Could not resolve rolling contract {contract.code}, using original code")
+    return contract.code
+
+
 def get_current_position(api: sj.Shioaji, contract: Contract):
-    logger.debug(f"Getting current position for contract: {contract.code}")
+    # Resolve rolling contracts (MXFR1, TXFR1) to actual contract codes (MXFA6, TXFA6)
+    actual_code = resolve_actual_contract_code(api, contract)
+    logger.debug(f"Getting current position for contract: {contract.code} (resolved to {actual_code})")
     for position in api.list_positions(api.futopt_account):
-        if contract.code == position.code:
+        if actual_code == position.code:
             # FuturePosition uses 'direction' not 'side'
             direction = position.direction
             if direction == sj.constant.Action.Buy:
